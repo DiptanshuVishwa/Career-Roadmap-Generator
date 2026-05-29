@@ -1,5 +1,30 @@
 import {GoogleGenAI} from "@google/genai";
 
+const generateWithFallback = async (ai, prompt) =>{
+    const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+    for(const model of models){
+        try{
+            console.log(`Tring ${model}...`);
+            const response = await ai.models.generateContent({model, contents: prompt});
+            console.log(`Success with ${model}`);
+            return response.text;
+        } catch(error){
+            console.log(`${model} failed`);
+        }
+    }
+    return `
+Learn Fundamentals
+Build Beginner Projects
+Learn Advanced Concepts
+Learn Frameworks
+Learn Backend Development
+Learn Databases
+Build Full Stack Projects
+Prepare for Interviews
+`;
+};
+
+
 export const generateRoadmapWithAi = async ( targetRole, currentSkills, experienceLevel )=>{
     const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
@@ -11,10 +36,6 @@ export const generateRoadmapWithAi = async ( targetRole, currentSkills, experien
             4. No numbering explanation
             5. Keep steps concise`;
 
-    const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-    });
-    const text = response.text;
+    const text = await generateWithFallback(ai, prompt);
     return text.split("\n").map(step => step.trim()).filter(step => step.length > 0);
 };

@@ -20,7 +20,7 @@ export const generateRoadmap = async (req,res) =>{
         console.error(error);
         res.status(500).json({
             success: false,
-            message: "Failed to generate roadmap"
+            message: error?.message || "Failed to generate roadmap"
         });
     }
 };
