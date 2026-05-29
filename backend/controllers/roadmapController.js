@@ -24,3 +24,40 @@ export const generateRoadmap = async (req,res) =>{
         });
     }
 };
+
+export const getAllRoadmaps = async (req, res) =>{
+    try{
+        const roadmaps = await Roadmap.find().sort({createdAt: -1});
+        res.status(200).json({
+            success: true,
+            count: roadmaps.length,
+            roadmaps,
+        });
+    } catch(error){
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch roadmaps"
+        });
+    }
+};
+
+export const deleteRoadmap = async (req, res) =>{
+    try{
+        const roadmap = await Roadmap.findByIdAndDelete(req.params.id);
+        if(!roadmap){
+            return res.status(404).json({
+                success: false,
+                message: "Roadmap not found"
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: "Roadmap deleted successfully"
+        });
+    } catch(error){
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete roadmap"
+        });
+    }
+};

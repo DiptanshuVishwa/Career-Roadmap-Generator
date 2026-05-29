@@ -3,10 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDb from "./config/db.js";
 import logger from "./middlewares/logger.js";
+import roadmapRoutes from "./routes/roadmapRoutes.js";
 
 dotenv.config();
-
-import roadmapRoutes from "./routes/roadmapRoutes.js";
 
 
 const app = express();
