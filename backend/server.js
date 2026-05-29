@@ -6,6 +6,9 @@ import logger from "./middlewares/logger.js";
 
 dotenv.config();
 
+import roadmapRoutes from "./routes/roadmapRoutes.js";
+
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -15,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(logger);
+app.use("/roadmap", roadmapRoutes);
 
 app.get("/",(req,res)=>{
     res.send("API is running");
