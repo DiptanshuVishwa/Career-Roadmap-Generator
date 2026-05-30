@@ -13,7 +13,15 @@ const PORT = process.env.PORT || 5000;
 
 connectDb();
 
-app.use(cors({origin: "*" }));
+app.use(cors({
+    origin: [
+      "http://localhost:3000",
+      "https://career-roadmap-generator-mu.vercel.app",
+    ],
+    methods: ["GET", "POST", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use(logger);
