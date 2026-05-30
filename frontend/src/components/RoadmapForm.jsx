@@ -9,16 +9,25 @@ export default function RoadmapForm() {
   const [experienceLevel, setExperienceLevel] = useState("");
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+ if (
+        !targetRole || !currentSkills || !experienceLevel
+    ) {
+        alert("Please fill all fields");
+        return;
+    }
     try{
         setLoading(true);
+        setSuccess(false);
+        setRoadmap(null);
         const {data} = await api.post("/roadmap/generate",{
             targetRole,
             currentSkills: currentSkills.split(",").map(skill => skill.trim()), experienceLevel
         });
         setRoadmap(data.roadmap);
+        setSuccess(true);
     } catch (error){
         console.error(error);
         alert("Failed to generate roadmap");
@@ -28,7 +37,7 @@ export default function RoadmapForm() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-white p-6 rounded-lg shadow-md mt-10 space-y-4"
+            className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mt-10 space-y-4"
         >
             <input
                 type="text"
@@ -74,11 +83,17 @@ export default function RoadmapForm() {
             </select>
 
             <button
-                type="submit"
-                className="w-full bg-black text-white py-3 rounded"
-            >
-                {loading ? "Generating.." : "Generated Roadmap"}
-            </button>
+            type="submit"
+            disabled={loading}
+    className={`w-full py-3 rounded transition ${loading? "bg-gray-400 cursor-not-allowed":"bg-black text-white hover:bg-gray-800"}`}
+>
+  {loading ? "Generating..." : "Generate Roadmap"}
+</button>
+{success && (
+  <div className="mt-4 p-3 bg-green-100 text-green-700 rounded">
+    Roadmap Generated Successfully ✅
+  </div>
+)}
             {roadmap && (
                  <div className="mt-6">
     <h2 className="text-xl font-bold mb-4 text-black">
